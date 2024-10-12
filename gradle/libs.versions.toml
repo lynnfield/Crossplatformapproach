@@ -17,8 +17,11 @@ kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 ktor = "2.3.12"
 logback = "1.5.8"
+parallel = "1.0"
+updateLoop = "1.0"
 
 [libraries]
+components-updateloop = { module = "com.genovich.components:update-loop", version.ref = "updateLoop" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -36,6 +39,7 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
+components-parallel = { module = "com.genovich.components:parallel", version.ref = "parallel" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
