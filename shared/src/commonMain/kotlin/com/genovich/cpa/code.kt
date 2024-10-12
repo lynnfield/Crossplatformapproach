@@ -37,10 +37,18 @@ suspend fun <Item> addItem(items: List<Item>, item: Item): List<Item> {
     return items + item
 }
 
-suspend fun <Item> selectItem(items: List<Item>): Item {
-    TODO("Interact with user")
+suspend fun <Item> SelectItemContext<Item>.selectItem(items: List<Item>): Item {
+    return select(items)
 }
 
-suspend fun <Item> createItem(): Item {
-    TODO("Interact with user")
+interface SelectItemContext<Item> {
+    suspend fun select(items: List<Item>): Item
+}
+
+suspend fun <Item> CreateItemContext<Item>.createItem(): Item {
+    return create()
+}
+
+interface CreateItemContext<Item> {
+    suspend fun create(): Item
 }
