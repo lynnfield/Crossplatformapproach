@@ -19,11 +19,14 @@ ktor = "2.3.12"
 logback = "1.5.8"
 oneOf = "1.0"
 parallel = "1.0"
+uistate = "1.0"
 updateLoop = "1.0"
 whileActive = "1.0"
 
 [libraries]
 components-oneof = { module = "com.genovich.components:one-of", version.ref = "oneOf" }
+components-parallel = { module = "com.genovich.components:parallel", version.ref = "parallel" }
+components-uistate = { module = "com.genovich.components:uistate", version.ref = "uistate" }
 components-updateloop = { module = "com.genovich.components:update-loop", version.ref = "updateLoop" }
 components-whileactive = { module = "com.genovich.components:while-active", version.ref = "whileActive" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -44,7 +47,6 @@ logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
-components-parallel = { module = "com.genovich.components:parallel", version.ref = "parallel" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
