@@ -1,14 +1,7 @@
 package com.genovich.consoleui
 
 import com.genovich.components.OneOf
-import com.genovich.cpa.CreateAndAddDependencies
-import com.genovich.cpa.CreateOrRemoveDependencies
-import com.genovich.cpa.ExampleAppDependencies
-import com.genovich.cpa.SelectAndRemoveItemDependencies
-import com.genovich.cpa.createAndAdd
-import com.genovich.cpa.createOrRemove
-import com.genovich.cpa.exampleApp
-import com.genovich.cpa.selectAndRemoveItem
+import com.genovich.cpa.ExampleAppAssembly
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -27,44 +20,23 @@ fun main() {
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
 
-    val selectAndRemoveContext = object : SelectAndRemoveItemDependencies<String> {
-        override suspend fun selectItem(items: List<String>): String {
+    val exampleApp = ExampleAppAssembly(
+        selectItem = { items ->
             outputFlow.emit(
                 items.withIndex().joinToString("\n") { (index, item) -> "$index. $item" })
-            return inputFlow.filterIsInstance<OneOf.Second<Int>>()
+            inputFlow.filterIsInstance<OneOf.Second<Int>>()
                 .mapNotNull { items.getOrNull(it.second) }
                 .first()
-        }
-
-        override suspend fun removeItem(items: List<String>, item: String): List<String> =
-            com.genovich.cpa.removeItem(items, item)
-    }
-    val createAndAddContext = object : CreateAndAddDependencies<String> {
-        override suspend fun createItem(): String {
-            return inputFlow.filterIsInstance<OneOf.First<String>>()
+        },
+        createItem = {
+            inputFlow.filterIsInstance<OneOf.First<String>>()
                 .map { it.first }
                 .first()
         }
-
-        override suspend fun addItem(items: List<String>, item: String): List<String> =
-            com.genovich.cpa.addItem(items, item)
-    }
-
-    val createOrRemoveContext = object : CreateOrRemoveDependencies<String> {
-        override suspend fun selectAndRemoveItem(items: List<String>): List<String> =
-            selectAndRemoveContext.selectAndRemoveItem(items)
-
-        override suspend fun createAndAdd(items: List<String>): List<String> =
-            createAndAddContext.createAndAdd(items)
-    }
-
-    val exampleAppContext = object : ExampleAppDependencies<String> {
-        override suspend fun createOrRemove(items: List<String>): List<String> =
-            createOrRemoveContext.createOrRemove(items)
-    }
+    )
 
     runBlocking {
-        launch(Dispatchers.Default) { exampleAppContext.exampleApp(emptyList()) }
+        launch(Dispatchers.Default) { exampleApp(emptyList()) }
         outputFlow.collectLatest { text ->
             println("Items:")
             println(text)

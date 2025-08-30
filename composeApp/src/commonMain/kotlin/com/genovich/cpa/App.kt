@@ -39,37 +39,12 @@ fun App(
         //  Ideally you should to run the logic outside of App() and provide selectItemsFlow and createItemsFlow as parameters
         //  Logic should be able to "live" longer than the UI
         LaunchedEffect(Logic) {
-            val selectAndRemoveContext = object : SelectAndRemoveItemDependencies<String> {
-                override suspend fun selectItem(items: List<String>): String {
-                    return selectItemsFlow.showAndGetResult(items)
-                }
+            val exampleApp = ExampleAppAssembly(
+                selectItem = { items -> selectItemsFlow.showAndGetResult(items) },
+                createItem = { createItemsFlow.showAndGetResult(Unit) },
+            )
 
-                override suspend fun removeItem(items: List<String>, item: String): List<String> =
-                    com.genovich.cpa.removeItem(items, item)
-            }
-            val createAndAddContext = object : CreateAndAddDependencies<String> {
-                override suspend fun createItem(): String {
-                    return createItemsFlow.showAndGetResult(Unit)
-                }
-
-                override suspend fun addItem(items: List<String>, item: String): List<String> =
-                    com.genovich.cpa.addItem(items, item)
-            }
-
-            val createOrRemoveContext = object : CreateOrRemoveDependencies<String> {
-                override suspend fun selectAndRemoveItem(items: List<String>): List<String> =
-                    selectAndRemoveContext.selectAndRemoveItem(items)
-
-                override suspend fun createAndAdd(items: List<String>): List<String> =
-                    createAndAddContext.createAndAdd(items)
-            }
-
-            val exampleAppContext = object : ExampleAppDependencies<String> {
-                override suspend fun createOrRemove(items: List<String>): List<String> =
-                    createOrRemoveContext.createOrRemove(items)
-            }
-
-            exampleAppContext.exampleApp(emptyList())
+            exampleApp(emptyList())
         }
 
         Column {
